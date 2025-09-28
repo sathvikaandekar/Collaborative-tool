@@ -109,5 +109,29 @@ def add_comment(request, task_pk):
         content = request.POST.get('content')
         Comment.objects.create(task=task, author=request.user, content=content)
         return redirect('project_detail', pk=task.project.pk)
+        # pmtool/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('projects.urls')),
+]
+
+# projects/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('register/', views.register, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', lambda request: (logout(request), redirect('login'))[1], name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('project/create/', views.create_project, name='create_project'),
+    path('project/<int:pk>/', views.project_detail, name='project_detail'),
+    path('project/<int:project_pk>/task/create/', views.create_task, name='create_task'),
+    path('task/<int:task_pk>/comment/', views.add_comment, name='add_comment'),
+]
+
         
     
